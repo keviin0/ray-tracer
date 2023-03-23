@@ -57,17 +57,14 @@ class vec3 {
         return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
     }
 
+    bool near_zero() const {
+        const auto s = 1e-8;
+        return (fabs(e[0]) < s && fabs(e[1]) < s && fabs(e[2]) < s);
+    }
+
 };
 using point3 = vec3;
 using color = vec3;
-
-inline vec3 random_in_unit_sphere() {
-    while (true) {
-        auto p = vec3::random(-1, 1);
-        if (p.length_squared() >= 1) continue;
-        return p;
-    }
-}
 
 inline std::ostream& operator<<(std::ostream &out, const vec3 &v) {
     return out << v.e[0] << ' ' << v.e[1] << ' ' << v.e[2];
@@ -111,6 +108,20 @@ inline vec3 unit_vector(vec3 v) {
     return v / v.length();
 }
 
+inline vec3 random_in_unit_sphere() {
+    while (true) {
+        auto p = vec3::random(-1, 1);
+        if (p.length_squared() >= 1) continue;
+        return p;
+    }
+}
 
+inline vec3 random_unit_vector() {
+    return unit_vector(random_in_unit_sphere());
+}
+
+vec3 reflect(const vec3& v, const vec3& n) {
+    return v - 2 * dot(v, n) * n; 
+}
 
 #endif
